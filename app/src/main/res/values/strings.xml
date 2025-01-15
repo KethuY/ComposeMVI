@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">ComposeArchSample</string>
     <string name="ok">Ok</string>
-
     <string name="attention">Attention</string>
     <string name="back_button">Back</string>
     <string name="delete">Delete</string>
@@ -23,4 +22,16 @@
     <string name="yes">Yes</string>
     <string name="required_fields">*required fields</string>
     <string name="inventories">Inventories</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="already_a_user_login">Already a user? Login</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="please_enter_valid_name">Please enter valid name</string>
+    <string name="user_name">User name</string>
+    <string name="welcome_to_adib_bank">Welcome to adib bank</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="error">Error</string>
+    <string name="login">Login</string>
+    <string name="login_to_application">Login to Application</string>
 </resources>

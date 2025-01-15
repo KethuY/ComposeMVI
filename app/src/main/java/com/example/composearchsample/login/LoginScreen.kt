@@ -22,10 +22,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import com.example.composearchsample.components.CustomDialog
+import com.example.composearchsample.R
+import com.example.composearchsample.components.ShowDialog
 import com.example.composearchsample.ui.theme.PurpleGrey80
 
 @Composable
@@ -65,7 +67,7 @@ fun LoginScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Login to Application",
+                    text = stringResource(R.string.login_to_application),
                     modifier = commonModifier,
                     color = Color.Red,
                     style = MaterialTheme.typography.bodyLarge
@@ -75,7 +77,7 @@ fun LoginScreen(
                     onValueChange = {
                         onEvent.invoke(LoginEvent.ValidateEmail(it))
                     },
-                    label = { Text("Email") },
+                    label = { Text(stringResource(R.string.email)) },
                     modifier = commonModifier,
                     colors = colors,
                     isError = state.value.email.second.not(),
@@ -86,7 +88,7 @@ fun LoginScreen(
                     onValueChange = {
                         onEvent.invoke(LoginEvent.ValidatePassword(it))
                     },
-                    label = { Text("Password") },
+                    label = { Text(stringResource(R.string.password)) },
                     modifier = commonModifier,
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -98,7 +100,7 @@ fun LoginScreen(
                     onClick = { onEvent.invoke(LoginEvent.LoginClicked) },
                     enabled = state.value.isValidForm
                 ) {
-                    Text(text = "Login")
+                    Text(text = stringResource(R.string.login))
                 }
 
                 BackHandler {
@@ -110,9 +112,9 @@ fun LoginScreen(
         when {
             state.value.isLoading -> CircularProgressIndicator(color = Color.Blue)
             state.value.isLoggedInSuccessfully -> onNavigateToLanding()
-            state.value.isError -> CustomDialog(
-                title = "Error",
-                message = "Something went wrong",
+            state.value.isError -> ShowDialog(
+                title = stringResource(R.string.error),
+                message = stringResource(R.string.something_went_wrong),
                 onConfirmation = { onEvent.invoke(LoginEvent.ClearError) })
         }
     }

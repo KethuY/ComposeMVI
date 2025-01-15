@@ -12,10 +12,6 @@ import com.example.composearchsample.inventory.entry.InventoryEntryScreen
 import com.example.composearchsample.inventory.entry.InventoryEntryViewModel
 import com.example.composearchsample.inventory.landing.InventoryLandingScreen
 import com.example.composearchsample.inventory.landing.InventoryLandingViewModel
-import com.example.composearchsample.login.LoginScreen
-import com.example.composearchsample.login.LoginViewModel
-import com.example.composearchsample.signup.SignUpScreen
-import com.example.composearchsample.signup.SignUpViewModel
 
 /**
  * Created by Kethu on 11/06/2024.
@@ -38,7 +34,9 @@ fun InventoryNavHost(
             InventoryLandingScreen(
                 viewModel::onEvent,
                 uiState,
-                navigateToInventoryUpdate = { navController.navigate(InventoryEditScreen) },
+                navigateToInventoryUpdate = { id ->
+                    navController.navigate(InventoryEntryScreen(id))
+                },
                 navigateToInventoryEntry = { navController.navigate(InventoryEntryScreen) },
                 onAppExist = onAppExist
             )
@@ -46,29 +44,15 @@ fun InventoryNavHost(
         composable<InventoryEntryScreen> {
             val viewModel = hiltViewModel<InventoryEntryViewModel>()
             val state = viewModel.uiState.collectAsStateWithLifecycle()
-             InventoryEntryScreen(viewModel::onEvent,state,onNavBack={},onInventorySavedSuccessfully={})
-        }
-
-        composable<InventoryDetailsScreen> {
-            val viewModel = hiltViewModel<LoginViewModel>()
-            val loginUiState = viewModel.uiState.collectAsStateWithLifecycle()
-            LoginScreen(
-                onEvent = viewModel::onEvent,
-                state = loginUiState,
-                onNavigateToLanding = { navController.navigate(InventoryFlow) },
-                onAppExist = onAppExist
-            )
-        }
-
-        composable<InventoryEditScreen> {
-            val viewModel = hiltViewModel<LoginViewModel>()
-            val loginUiState = viewModel.uiState.collectAsStateWithLifecycle()
-            LoginScreen(
-                onEvent = viewModel::onEvent,
-                state = loginUiState,
-                onNavigateToLanding = { navController.navigate(InventoryFlow) },
-                onAppExist = onAppExist
-            )
+            InventoryEntryScreen(
+                viewModel::onEvent,
+                state,
+                onNavBack = {
+                    navController.popBackStack()
+                },
+                onInventorySavedSuccessfully = {
+                    navController.navigate(InventoryLandingScreen)
+                })
         }
     }
 }

@@ -12,8 +12,6 @@ interface InventoryRepository {
 
      fun addInventory(item: Inventory): Flow<Result<Boolean>>
 
-     fun updateInventory(item: Inventory): Flow<Result<Boolean>>
-
      fun deleteInventory(item: Inventory): Flow<Result<Boolean>>
 
     fun getInventory(id: Int): Flow<Result<Inventory>>

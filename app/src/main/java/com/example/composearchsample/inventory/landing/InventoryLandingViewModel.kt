@@ -1,5 +1,6 @@
 package com.example.composearchsample.inventory.landing
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.composearchsample.base.BaseMVIViewModel
 import com.example.composearchsample.data.repos.InventoryRepository
@@ -24,17 +25,21 @@ class InventoryLandingViewModel @Inject constructor(private val repository: Inve
 
     override fun onEvent(screenEvent: InventoryLandingEvent) {
         if (screenEvent == InventoryLandingEvent.GetInventories) {
+            _uiState.update {
+                it.copy(isApiCalled = true)
+            }
             repository.getInventories().map { res ->
+                Log.d("Kethu", "onEvent: getInventories called")
                 _uiState.update {
-                    it.copy(isLoading = Result.Loading == res)
+                    it.copy(isLoading = Result.Loading == res, isApiCalled = true)
                 }
                 when (res) {
                     is Result.Success -> {
+                        Log.d("Kethu", "onEvent:  success ${res.data}")
                         _uiState.update {
                             it.copy(inventories = res.data)
                         }
                     }
-
                     else -> Unit
                 }
             }.launchIn(viewModelScope)

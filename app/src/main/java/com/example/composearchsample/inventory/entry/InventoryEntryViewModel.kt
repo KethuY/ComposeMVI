@@ -1,13 +1,13 @@
 package com.example.composearchsample.inventory.entry
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.example.composearchsample.base.BaseMVIViewModel
-import com.example.composearchsample.data.datastore.DataStoreConstants
 import com.example.composearchsample.data.local.inventory.Inventory
 import com.example.composearchsample.data.repos.InventoryRepository
 import com.example.composearchsample.data.uimodels.InventoryDetails
 import com.example.composearchsample.network.Result
-import com.example.composearchsample.signup.SignUpUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -23,10 +22,20 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class InventoryEntryViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val inventoryRepository: InventoryRepository
 ) : BaseMVIViewModel<InventoryEntryEvent>() {
-
-    private val _uiState = MutableStateFlow(InventoryEntryUiState())
+    private val inventory = savedStateHandle.toRoute<Inventory>()
+    private val _uiState = MutableStateFlow(
+        InventoryEntryUiState(
+            inventoryDetails = InventoryDetails(
+                id = inventory.id,
+                name = inventory.name.toString(),
+                quantity = inventory.quantity.toString(),
+                price = inventory.price.toString()
+            )
+        )
+    )
     val uiState: StateFlow<InventoryEntryUiState> = _uiState.asStateFlow()
     override fun onEvent(screenEvent: InventoryEntryEvent) {
         when (screenEvent) {
@@ -38,7 +47,7 @@ class InventoryEntryViewModel @Inject constructor(
     private fun saveInventoryDetails() {
         val data = uiState.value.inventoryDetails
         val inventData = Inventory(
-            id = 0,
+            id = data.id,
             name = data.name,
             price = data.price.toDoubleOrNull() ?: 0.0,
             quantity = data.quantity.toIntOrNull() ?: 0
@@ -61,8 +70,6 @@ class InventoryEntryViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
-
-
     }
 
     private fun updateState(details: InventoryDetails) {

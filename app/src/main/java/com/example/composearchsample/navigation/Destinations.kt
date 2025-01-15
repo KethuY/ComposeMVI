@@ -7,22 +7,19 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 object Splash
+
 @Serializable
 object Login
+
 @Serializable
 object SignUp
+
 @Serializable
 object InventoryFlow
 
 @Serializable
-object InventoryEntryScreen
+data class InventoryEntryScreen(val id: Int = 0)
 
-@Serializable
-object InventoryEditScreen
 @Serializable
 object InventoryLandingScreen
-
-@Serializable
-object InventoryDetailsScreen
-
 

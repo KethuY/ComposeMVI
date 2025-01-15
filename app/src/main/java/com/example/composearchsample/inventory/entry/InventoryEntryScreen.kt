@@ -12,7 +12,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -28,15 +27,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.composearchsample.R
-import com.example.composearchsample.components.CustomDialog
+import com.example.composearchsample.components.ShowDialog
 import com.example.composearchsample.components.CustomToolbar
 import com.example.composearchsample.data.uimodels.InventoryDetails
 import com.example.composearchsample.ui.theme.ComposeArchSampleTheme
 import java.util.Currency
 import java.util.Locale
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InventoryEntryScreen(
     onEvent: (InventoryEntryEvent) -> Unit,
@@ -57,11 +54,7 @@ fun InventoryEntryScreen(
         InventoryDetailsBody(
             itemUiState = state.value,
             onItemValueChange = { inventoryDetails ->
-                onEvent.invoke(
-                    InventoryEntryEvent.UpdateUiState(
-                        inventoryDetails
-                    )
-                )
+                onEvent.invoke(InventoryEntryEvent.UpdateUiState(inventoryDetails))
             },
             onSaveClick = {
                 onEvent.invoke(InventoryEntryEvent.AddInventory)
@@ -107,9 +100,9 @@ fun InventoryDetailsBody(
         when {
             itemUiState.isLoading -> CircularProgressIndicator(color = Color.Blue)
             itemUiState.isInventoryDetailsAddedSuccessfully -> onInventorySavedSuccessfully()
-            itemUiState.isError -> CustomDialog(
-                title = "Error",
-                message = "Something went wrong"
+            itemUiState.isError -> ShowDialog(
+                title = stringResource(R.string.error),
+                message = stringResource(R.string.something_went_wrong)
             )
         }
     }
@@ -174,18 +167,5 @@ fun InventoryDetailsForm(
                 modifier = Modifier.padding(start = dimensionResource(id = R.dimen.padding_medium))
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun ItemEntryScreenPreview() {
-    ComposeArchSampleTheme {
-        InventoryDetailsBody(itemUiState = InventoryEntryUiState(
-            InventoryDetails(
-                name = "Item name", price = "10.00", quantity = "5"
-            )
-        ), onItemValueChange = {}, onSaveClick = {}, onInventorySavedSuccessfully = { }
-        )
     }
 }

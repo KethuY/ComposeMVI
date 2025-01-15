@@ -47,6 +47,8 @@ fun CustomNavHost(
                 onAppExist()
             }, onNavigateToLanding = {
                 navController.navigate(InventoryFlow)
+            }, onNavigateToLogin = {
+                navController.navigate(Login)
             })
         }
         composable<InventoryFlow> {
@@ -61,7 +63,9 @@ fun CustomNavHost(
                 onEvent = viewModel::onEvent,
                 state = loginUiState,
                 onNavigateToLanding = { navController.navigate(InventoryFlow) },
-                onAppExist = onAppExist
+                onAppExist = /*onAppExist*/ {
+                    navController.popBackStack()
+                }
             )
         }
     }

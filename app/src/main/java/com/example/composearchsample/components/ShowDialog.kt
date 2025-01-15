@@ -11,7 +11,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.example.composearchsample.R
 
 @Composable
-fun CustomDialog(
+fun ShowDialog(
     icon: ImageVector? = null,
     title: String,
     message: String,

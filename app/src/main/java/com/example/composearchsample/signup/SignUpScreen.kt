@@ -19,17 +19,20 @@ import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import com.example.composearchsample.components.CustomDialog
+import com.example.composearchsample.R
+import com.example.composearchsample.components.ShowDialog
 
 @Composable
 fun SignUpScreen(
     onEvent: (SignUpEvent) -> Unit,
     state: State<SignUpUiState>,
     onAppExist: () -> Unit,
-    onNavigateToLanding: () -> Unit
+    onNavigateToLanding: () -> Unit,
+    onNavigateToLogin: () -> Unit
 ) {
     val commonModifier = Modifier.padding(bottom = 16.dp)
     val colors = OutlinedTextFieldDefaults.colors(
@@ -50,7 +53,7 @@ fun SignUpScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Welcome to adib bank",
+            text = stringResource(R.string.welcome_to_adib_bank),
             modifier = commonModifier,
             color = Color.Red,
             style = MaterialTheme.typography.bodyMedium
@@ -60,14 +63,13 @@ fun SignUpScreen(
             onValueChange = {
                 onEvent.invoke(SignUpEvent.ValidateName(it))
             },
-            label = { Text("User name") },
-            modifier = commonModifier,
+            label = { Text(stringResource(R.string.user_name)) },
             isError = state.value.userName.second.not(),
             colors = colors,
             supportingText = {
                 if (state.value.userName.second) {
                     Text(
-                        text = "Please enter valid name",
+                        text = stringResource(R.string.please_enter_valid_name),
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
@@ -78,7 +80,7 @@ fun SignUpScreen(
             onValueChange = {
                 onEvent.invoke(SignUpEvent.ValidateEmail(it))
             },
-            label = { Text("Email") },
+            label = { Text(stringResource(R.string.email)) },
             modifier = commonModifier,
             colors = colors,
             isError = state.value.email.second.not(),
@@ -89,7 +91,7 @@ fun SignUpScreen(
             onValueChange = {
                 onEvent.invoke(SignUpEvent.ValidatePassword(it))
             },
-            label = { Text("Password") },
+            label = { Text(stringResource(R.string.password)) },
             modifier = commonModifier,
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -99,7 +101,7 @@ fun SignUpScreen(
         OutlinedTextField(
             value = state.value.confirmPassword.first,
             onValueChange = { onEvent.invoke(SignUpEvent.ValidateConfirmPassword(it)) },
-            label = { Text("Confirm password") },
+            label = { Text(stringResource(R.string.confirm_password)) },
             modifier = commonModifier,
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -111,11 +113,11 @@ fun SignUpScreen(
             onClick = { onEvent.invoke(SignUpEvent.SignUpClick) },
             enabled = state.value.isFormValid
         ) {
-            Text(text = "Sign Up")
+            Text(text = stringResource(R.string.sign_up))
         }
 
-        TextButton(onClick = { /*TODO*/ }, commonModifier.align(Alignment.End)) {
-            Text(text = "Already a user?Login")
+        TextButton(onClick = { onNavigateToLogin() }, commonModifier.align(Alignment.End)) {
+            Text(text = stringResource(R.string.already_a_user_login))
         }
 
         BackHandler {
@@ -126,6 +128,6 @@ fun SignUpScreen(
     when {
         state.value.isLoading -> CircularProgressIndicator(color = Color.Blue)
         state.value.isUserSignedUp -> onNavigateToLanding()
-        state.value.isError -> CustomDialog(title="Error", message = "Something went wrong", onConfirmation = {onEvent.invoke(SignUpEvent.ClearError)})
+        state.value.isError -> ShowDialog(title= stringResource(R.string.error), message = stringResource(R.string.something_went_wrong), onConfirmation = {onEvent.invoke(SignUpEvent.ClearError)})
     }
 }
